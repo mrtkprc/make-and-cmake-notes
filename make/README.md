@@ -147,7 +147,120 @@ all:
     echo `pwd` # This cd affects the next command. 
 ```
 
+#### Default Shell
 
+```make
+SHELL=/bin/bash
+
+cool:
+    echo "Hello from bash"
+```
+
+#### Error handling with `-k`, `-i`, and `-`
+Example: [Ignored error](examples/05_error_handling/Makefile)
+
+```make
+one:
+	-false
+	touch a.txt
+clean:
+	rm a.txt
+```
+
+Output of ``make one``
+```
+false
+make: [Makefile:2: one] Error 1 (ignored)
+touch a.txt
+```
+
+-   If you supply `-k` as command argument, you can look at all errors directly.
+
+-   `-i` ignores all errors.
+
+#### Arguments to make
+-   `--dry-run` : Show only commands which will be run.
+-   You can have multiple targets to make.
+
+For example:
+``make clean one``: runs the `clean` goal, then run `one` goal
+
+#### Variables
+
+```make
+one = one ${later_variable}
+two := two ${later_variable}
+later_variable=later
+all:
+    echo ${one}
+    echo ${two}
+```
+`one = one ${later_variable}`: **later_variable** is assigned/found when variable `one` is used.
+
+`two := two ${later_variable}`: **later_variable** is assigned in declaration time/immediately.
+
+**`?=` only sets variables if they have not yet been set**
+
+```make
+one = hello
+one ?= will not be set 
+two ? will be set
+```
+
+-   You can pass command line argument to makefile
+
+``make option_one="x" option_two="y"``
+
+-   If you wish overriding these options, you should specifiy override.
+
+``override option_one="did override"``
+
+#### Target specific variables
+
+```make
+all: one = cool thing
+all:
+    echo one is defined: ${one}
+other:
+    echo one is nothing: ${other}
+```
+
+#### Pattern-specific variables
+
+```make
+%.c: one = cool thing
+blah.c:
+    @echo one is defined: ${one}
+other:
+    @echo one is nothing: ${one}
+```
+
+#### Conditional part of Makefile
+
+```make
+foo = ok
+all: 
+ifeq (${foo}, ok) # Space is required after ifeq
+    echo "foo equals ok"
+else
+    echo "nope"
+```
+
+#### Check if a variable is defined
+
+```make
+ifdef foo
+    echo "foo is defined"
+endif
+```
+
+#### makeflags
+
+```make
+ifneq (, $(findstring i, $(MAKEFLAGS)))
+    echo "i was passed to makeflags"
+endif
+```
 
 #### References:
 -   makefiletutorial.com
