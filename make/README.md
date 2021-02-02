@@ -262,5 +262,51 @@ ifneq (, $(findstring i, $(MAKEFLAGS)))
 endif
 ```
 
+### Functions
+Example: [Sample Function Example](examples/06_functions/Makefile)
+
+```make
+bar := ${subst not, totaly, "I am not superman"}
+all:
+    echo ${bar}
+```
+
+#### String substituion
+Example: [String Substituion](examples/07_string_substition/Makefile)
+```make
+foo := a.o b.o c.o l.a
+one := $(patsubst %.o, %.c, $(foo))
+```
+
+#### foreach function
+Example: [Foreach Function](examples/08_foreach/Makefile)
+```make
+my_list := foo bar tar 
+bar := $(foreach wrd, ${my_list}, ${wrd}, )
+```
+`Output: foo, bar, tar, `
+
+#### The `call` function
+Example: [Call function](examples/09_call_function/Makefile)
+
+```make
+my_function = Variable name: $(0) FirstName: $(1) LastName: $(2)
+all:
+	@echo $(call my_function, mert, koprucu)
+```
+
+#### Shell Function:
+
+`@echo ${shell ls -la}`
+
+Shell function is very ugly because newline characters are gone.
+
+
+//TODO: Search following concepts
+vpath
+.phony
+.delete_on_error
+
+
 #### References:
 -   makefiletutorial.com
